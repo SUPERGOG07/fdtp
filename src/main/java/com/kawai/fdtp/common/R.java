@@ -23,6 +23,14 @@ public class R<T> {
         return r;
     }
 
+    public static <T> R<T> success(T object,String msg){
+        R<T> r = new R<T>();
+        r.data = object;
+        r.code = 1;
+        r.msg = msg;
+        return r;
+    }
+
     public static <T> R<T> error(String msg){
         R<T> r = new R<>();
         r.code = 0;

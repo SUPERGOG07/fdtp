@@ -1,18 +1,5 @@
 package com.kawai.fdtp.pojo;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,19 +8,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("attraction")
-public class Attraction {
+@TableName("picture")
+public class Picture {
 
     private Long id;
 
-    private String name;
+    private Integer type;
 
-    private String detail;
+    private Long target;
 
-    private String mainPicture;
+    private String url;
 
-    private Integer grade;
-
-    private String address;
 
 }
