@@ -22,5 +22,5 @@ public class Collect {
 
     private Long target;
 
-    private LocalDateTime time;
+    private Long time;
 }

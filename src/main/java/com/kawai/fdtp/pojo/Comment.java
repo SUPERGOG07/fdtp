@@ -30,6 +30,6 @@ public class Comment {
 
     private Integer grade;
 
-    private LocalDateTime time;
+    private Long time;
 
 }

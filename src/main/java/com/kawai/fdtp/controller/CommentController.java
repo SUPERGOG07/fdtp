@@ -28,7 +28,7 @@ public class CommentController {
         log.info("添加评论-->{}", comment.toString());
 
         comment.setGrade(0);
-        comment.setTime(LocalDateTime.now());
+        comment.setTime(System.currentTimeMillis());
         if (commentService.save(comment)){
             return R.success(comment,"评论添加成功");
         }
@@ -57,7 +57,7 @@ public class CommentController {
     public R<Comment> update(@RequestBody Comment comment){
         log.info("更新评论-->{}",comment.toString());
 
-        comment.setTime(LocalDateTime.now());
+        comment.setTime(System.currentTimeMillis());
 
         if(commentService.getById(comment.getId())!=null){
             if (commentService.updateById(comment)) {
@@ -76,9 +76,9 @@ public class CommentController {
      * @return
      */
     @GetMapping("/get/page/{type}/{target}/{level}/{page}/{pageSize}")
-    @ApiOperation("一级评论分页查询")
+    @ApiOperation("评论分页查询")
     public R<Page> page1(@PathVariable int type,@PathVariable long target ,@PathVariable int level,@PathVariable int page, @PathVariable int pageSize){
-        log.info("一级评论分页查询--> type={}, page = {} , pageSize = {}",type,page,pageSize);
+        log.info("评论分页查询--> type={}, page = {} , pageSize = {}",type,page,pageSize);
 
         Page pageInfo = new Page(page,pageSize);
 
@@ -89,7 +89,12 @@ public class CommentController {
 
         commentService.page(pageInfo,wrapper);
 
-        return R.success(pageInfo);
+        if(pageInfo.getTotal()!=0){
+            return R.success(pageInfo);
+        }
+
+        return R.error("评论查询失败");
+
     }
 
 
