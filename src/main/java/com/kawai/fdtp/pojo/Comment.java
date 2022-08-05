@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @TableName("comment")
 public class Comment {
 
-    private Long id;
+    private String id;
 
     private String userName;
 
@@ -24,7 +24,7 @@ public class Comment {
 
     private String word;
 
-    private Long target;
+    private String target;
 
     private Integer level;
 

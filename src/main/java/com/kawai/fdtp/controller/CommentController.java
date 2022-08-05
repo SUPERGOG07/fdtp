@@ -39,7 +39,7 @@ public class CommentController {
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation("删除评论")
-    public R<String> delete(@PathVariable Long id){
+    public R<String> delete(@PathVariable String id){
         log.info("删除评论-->{}",id);
 
         Comment comment = commentService.getById(id);
@@ -77,7 +77,7 @@ public class CommentController {
      */
     @GetMapping("/get/page/{type}/{target}/{level}/{page}/{pageSize}")
     @ApiOperation("评论分页查询")
-    public R<Page> page1(@PathVariable int type,@PathVariable long target ,@PathVariable int level,@PathVariable int page, @PathVariable int pageSize){
+    public R<Page> page1(@PathVariable int type,@PathVariable String target ,@PathVariable int level,@PathVariable int page, @PathVariable int pageSize){
         log.info("评论分页查询--> type={}, page = {} , pageSize = {}",type,page,pageSize);
 
         Page pageInfo = new Page(page,pageSize);

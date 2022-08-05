@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @TableName("picture")
 public class Picture {
 
-    private Long id;
+    private String id;
 
     private Integer type;
 
-    private Long target;
+    private String target;
 
     private String url;
 

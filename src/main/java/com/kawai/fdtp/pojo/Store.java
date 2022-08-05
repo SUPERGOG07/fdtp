@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @TableName("store")
 public class Store {
 
-    private Long id;
+    private String id;
 
     private String name;
 

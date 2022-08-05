@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kawai.fdtp.common.R;
 import com.kawai.fdtp.pojo.Collect;
 import com.kawai.fdtp.service.CollectService;
+import com.kawai.fdtp.service.PostsService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,8 @@ public class CollectController {
 
     @Resource
     CollectService collectService;
+    @Resource
+    PostsService postsService;
 
     @PostMapping("/add")
     @ApiOperation("添加收藏")
@@ -32,6 +35,9 @@ public class CollectController {
         }else {
             collect.setTime(System.currentTimeMillis());
             if(collectService.save(collect)){
+
+                postsService.change(collect.getTarget(),1);
+
                 return R.success("对象收藏成功");
             }else return R.error("对象收藏失败");
         }
@@ -39,11 +45,15 @@ public class CollectController {
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation("删除收藏")
-    public R<String> delete(@PathVariable Long id){
+    public R<String> delete(@PathVariable String id){
         log.info("收藏删除-->{}",id);
 
-        if(collectService.getById(id)!=null){
+        Collect collect = collectService.getById(id);
+
+        if(collect!=null){
             if(collectService.removeById(id)){
+                postsService.change(collect.getTarget(),-1);
+
                 return R.success("收藏删除成功");
             }
             return R.error("收藏删除失败");
@@ -85,6 +95,19 @@ public class CollectController {
 
         return R.error("查询失败");
 
+    }
+
+    @GetMapping("/count/{target}")
+    @ApiOperation("获得目标被收藏数")
+    public R<String> count(@PathVariable String target){
+        log.info("收藏数量获取--> target={}",target);
+
+        LambdaQueryWrapper<Collect> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Collect::getTarget,target);
+
+        Long count = collectService.count(wrapper);
+
+        return R.success("统计成功").add("count",count.toString());
     }
 
 }
