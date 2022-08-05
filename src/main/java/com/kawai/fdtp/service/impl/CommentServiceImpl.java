@@ -13,14 +13,14 @@ import javax.annotation.Resource;
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
     @Resource
-    CommentService commentService;
+    CommentMapper commentMapper;
 
     @Override
     public Boolean grade(String id, int num) {
-        Comment comment = commentService.getById(id);
+        Comment comment = commentMapper.selectById(id);
         if((comment.getGrade()+num )>=0){
             comment.setGrade(comment.getGrade()+num);
-            commentService.updateById(comment);
+            commentMapper.updateById(comment);
             return true;
         }
 
