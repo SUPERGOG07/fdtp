@@ -20,25 +20,27 @@ spring:
       mysql:
         usePingMethod : false   #刷新空闲时间
 
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      use-key-prefix: true
+      cache-null-values: true
+  #      key-prefix: CACHE_
+
   redis:
-    database: 0
-    host: localhost
+    host: 127.0.0.1
     port: 6379
+    database: 0
+    connect-timeout: 1800
     password: 123456
     lettuce:
       pool:
+        min-idle: 0
+        max-idle: 8
         max-active: 8
         max-wait: -1ms
-        max-idle: 8
-        min-idle: 0
-    connect-timeout: 5000ms
-
-  cache:
-    type: redis
-    cache-names: redisCache
-    redis:
-      cache-null-values: true
-      time-to-live: 0
+      shutdown-timeout: 100ms
 
 
 
