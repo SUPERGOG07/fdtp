@@ -19,4 +19,6 @@ public class User {
 
     private String userNick;
 
+    private String head;
+
 }

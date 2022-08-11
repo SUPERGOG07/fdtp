@@ -1,18 +1,21 @@
 package com.kawai.fdtp.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kawai.fdtp.common.R;
+import com.kawai.fdtp.dto.CommentDto;
 import com.kawai.fdtp.pojo.Comment;
+import com.kawai.fdtp.pojo.User;
 import com.kawai.fdtp.service.CommentService;
-import io.swagger.annotations.Api;
+import com.kawai.fdtp.service.UserService;
 import io.swagger.annotations.ApiOperation;
-import kotlin.jvm.internal.Lambda;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -21,6 +24,9 @@ public class CommentController {
 
     @Resource
     private CommentService commentService;
+
+    @Resource
+    UserService userService;
 
     @PostMapping("/add")
     @ApiOperation("添加评论")
@@ -77,23 +83,15 @@ public class CommentController {
      */
     @GetMapping("/get/page/{type}/{target}/{level}/{page}/{pageSize}")
     @ApiOperation("评论分页查询")
-    public R<Page> page1(@PathVariable int type,@PathVariable String target ,@PathVariable int level,@PathVariable int page, @PathVariable int pageSize){
+    public R<List<CommentDto>> page1(@PathVariable int type, @PathVariable String target , @PathVariable int level, @PathVariable int page, @PathVariable int pageSize){
         log.info("评论分页查询--> type={}, page = {} , pageSize = {}",type,page,pageSize);
 
-        Page pageInfo = new Page(page,pageSize);
+        List<CommentDto> result = commentService.getCommentList(type, target, level, page, pageSize);
 
-        LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Comment::getType,type).eq(Comment::getType,type)
-                .eq(Comment::getTarget,target).eq(Comment::getLevel,level);
-        wrapper.orderByDesc(Comment::getTime);
-
-        commentService.page(pageInfo,wrapper);
-
-        if(pageInfo.getTotal()!=0){
-            return R.success(pageInfo);
+        if (!result.isEmpty()){
+            return R.success(result);
         }
-
-        return R.error("评论查询失败");
+        return R.error("未查询到评论");
 
     }
 

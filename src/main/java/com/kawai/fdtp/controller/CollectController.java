@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -80,7 +81,7 @@ public class CollectController {
 
     @GetMapping("/page/{userName}/{type}/{page}/{pageSize}")
     @ApiOperation("获取多个收藏")
-    public R<Page> page(@PathVariable String userName,@PathVariable Integer type,@PathVariable Integer page,@PathVariable Integer pageSize){
+    public R<List<Collect>> page(@PathVariable String userName, @PathVariable Integer type, @PathVariable Integer page, @PathVariable Integer pageSize){
         log.info("收藏获取--> username={} , type={}",userName,type);
 
         Page pageInfo = new Page(page,pageSize);
@@ -90,7 +91,8 @@ public class CollectController {
         collectService.page(pageInfo,wrapper);
 
         if(pageInfo.getTotal()!=0){
-            return R.success(pageInfo);
+
+            return R.success(pageInfo.getRecords());
         }
 
         return R.error("查询失败");
