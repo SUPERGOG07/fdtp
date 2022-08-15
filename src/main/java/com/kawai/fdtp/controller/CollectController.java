@@ -28,7 +28,7 @@ public class CollectController {
 
     @PostMapping("/add")
     @ApiOperation("添加收藏")
-    public R<Collect> add(@RequestBody Collect collect){
+    public R<Collect> add(Collect collect){
         log.info("收藏增加-->{}",collect.toString());
 
         LambdaQueryWrapper<Collect> wrapper = new LambdaQueryWrapper<>();
@@ -68,7 +68,7 @@ public class CollectController {
 
     @PutMapping("/update")
     @ApiOperation("更新收藏")
-    public R<Collect> update(@RequestBody Collect collect){
+    public R<Collect> update( Collect collect){
         log.info("收藏更新-->{}",collect.toString());
 
         if(collectService.getById(collect.getId())!=null){

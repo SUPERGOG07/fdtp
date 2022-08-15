@@ -27,7 +27,7 @@ public class CommentController {
 
     @PostMapping("/add")
     @ApiOperation("添加评论")
-    public R<Comment> add(@RequestBody Comment comment){
+    public R<Comment> add( Comment comment){
         log.info("添加评论-->{}", comment.toString());
 
         comment.setGrade(0);
@@ -57,7 +57,7 @@ public class CommentController {
 
     @PutMapping("/update")
     @ApiOperation("更新评论")
-    public R<Comment> update(@RequestBody Comment comment){
+    public R<Comment> update( Comment comment){
         log.info("更新评论-->{}",comment.toString());
 
         comment.setTime(System.currentTimeMillis());
