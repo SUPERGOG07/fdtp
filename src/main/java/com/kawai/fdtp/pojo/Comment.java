@@ -32,4 +32,8 @@ public class Comment {
 
     private Long time;
 
+    public static Comment defaultConstruct(){
+        return new Comment("1","1",1,"1","1",1,1,System.currentTimeMillis());
+    }
+
 }

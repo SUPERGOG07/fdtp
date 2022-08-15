@@ -23,4 +23,8 @@ public class Collect {
     private String target;
 
     private Long time;
+
+    public static Collect defaultConstruct(){
+        return new Collect("1","1",1,"1",System.currentTimeMillis());
+    }
 }

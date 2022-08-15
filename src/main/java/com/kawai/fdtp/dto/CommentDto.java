@@ -26,4 +26,10 @@ public class CommentDto extends Comment {
     private Long time;
 
     private String head;
+
+    public static CommentDto defaultConstruct(){
+        CommentDto commentDto = (CommentDto) Comment.defaultConstruct();
+        commentDto.setHead("1");
+        return commentDto;
+    }
 }

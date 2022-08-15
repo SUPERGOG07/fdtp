@@ -63,7 +63,7 @@ public class CollectController {
             return R.error("收藏删除失败",collect);
         }
 
-        return R.error("该收藏不存在",new Collect());
+        return R.error("该收藏不存在",Collect.defaultConstruct());
     }
 
     @PutMapping("/update")
@@ -98,7 +98,9 @@ public class CollectController {
             return R.success("查询成功",pageInfo.getRecords());
         }
 
-        return R.error("查询失败",new ArrayList<>());
+        List<Collect> list = new ArrayList<>();
+        list.add(Collect.defaultConstruct());
+        return R.error("查询失败",list);
 
     }
 

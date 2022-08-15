@@ -36,7 +36,7 @@ public class CommentController {
             return R.success("评论添加成功",comment);
         }
 
-        return R.error("评论添加失败",new Comment());
+        return R.error("评论添加失败",Comment.defaultConstruct());
 
     }
 
@@ -88,7 +88,8 @@ public class CommentController {
         if (!result.isEmpty()){
             return R.success("查询成功",result);
         }
-        return R.error("未查询到评论",new ArrayList<>());
+        result.add(CommentDto.defaultConstruct());
+        return R.error("未查询到评论",result);
 
     }
 
