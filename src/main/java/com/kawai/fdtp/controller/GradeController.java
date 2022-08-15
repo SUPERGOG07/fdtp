@@ -31,25 +31,25 @@ public class GradeController {
 
     @GetMapping("/add/{type}/{target}")
     @ApiOperation("点赞专用接口")
-    public R<String> like(@PathVariable String type,@PathVariable String target){
+    public R<String> like(@PathVariable Integer type,@PathVariable String target){
         log.info("点赞-->{}",target);
         Boolean flag = false;
         int num = 1;
         switch (type){
-            case "attraction":
-                flag=attractionService.grade(target,num);
+            case 0:
+                flag=storeService.grade(target,num);
                 break;
-            case "comment":
-                flag=commentService.grade(target,num);
-                break;
-            case "food":
+            case 1:
                 flag=foodService.grade(target,num);
                 break;
-            case "posts":
+            case 2:
+                flag=attractionService.grade(target,num);
+                break;
+            case 3:
                 flag=postsService.grade(target,num);
                 break;
-            case "store":
-                flag=storeService.grade(target,num);
+            case 4:
+                flag=commentService.grade(target,num);
                 break;
             default:flag=false;
         }
@@ -61,25 +61,25 @@ public class GradeController {
 
     @GetMapping("/cancel/{type}/{target}")
     @ApiOperation("消赞专用接口")
-    public R<String> cancel(@PathVariable String type,@PathVariable String target){
+    public R<String> cancel(@PathVariable Integer type,@PathVariable String target){
         log.info("取消赞-->{}",target);
         Boolean flag = false;
         int num = -1;
         switch (type){
-            case "attraction":
-                flag=attractionService.grade(target,num);
+            case 0:
+                flag=storeService.grade(target,num);
                 break;
-            case "comment":
-                flag=commentService.grade(target,num);
-                break;
-            case "food":
+            case 1:
                 flag=foodService.grade(target,num);
                 break;
-            case "posts":
+            case 2:
+                flag=attractionService.grade(target,num);
+                break;
+            case 3:
                 flag=postsService.grade(target,num);
                 break;
-            case "store":
-                flag=storeService.grade(target,num);
+            case 4:
+                flag=commentService.grade(target,num);
                 break;
             default:flag=false;
         }

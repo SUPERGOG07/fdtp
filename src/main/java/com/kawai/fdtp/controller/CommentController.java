@@ -50,9 +50,9 @@ public class CommentController {
             if (commentService.removeById(id)){
                 return R.success("评论删除成功",comment);
             }
-            return R.error("评论删除失败",comment);
+            return R.error("评论删除失败",Comment.defaultConstruct());
         }
-        return R.error("评论不存在",comment);
+        return R.error("评论不存在",Comment.defaultConstruct());
     }
 
     @PutMapping("/update")
@@ -67,9 +67,9 @@ public class CommentController {
                 return R.success("评论更新成功",comment);
             }
 
-            return R.error("评论更新失败",comment);
+            return R.error("评论更新失败",Comment.defaultConstruct());
         }
-        return R.error("评论不存在",comment);
+        return R.error("评论不存在",Comment.defaultConstruct());
     }
 
     /**

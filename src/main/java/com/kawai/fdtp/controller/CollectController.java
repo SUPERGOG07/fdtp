@@ -35,15 +35,15 @@ public class CollectController {
         wrapper.eq(Collect::getUserName,collect.getUserName()).eq(Collect::getType,collect.getType())
                 .eq(Collect::getTarget,collect.getTarget());
         if(collectService.getOne(wrapper)!=null){
-            return R.error("已存在该收藏",collect);
+            return R.error("已存在该收藏",Collect.defaultConstruct());
         }else {
             collect.setTime(System.currentTimeMillis());
             if(collectService.save(collect)){
-
-                postsService.change(collect.getTarget(),1);
-
+                if (collect.getType()==3){
+                    postsService.change(collect.getTarget(),1);
+                }
                 return R.success("对象收藏成功",collect);
-            }else return R.error("对象收藏失败",collect);
+            }else return R.error("对象收藏失败",Collect.defaultConstruct());
         }
     }
 
@@ -56,11 +56,13 @@ public class CollectController {
 
         if(collect!=null){
             if(collectService.removeById(id)){
-                postsService.change(collect.getTarget(),-1);
+                if (collect.getType()==3){
+                    postsService.change(collect.getTarget(),-1);
+                }
 
                 return R.success("收藏删除成功",collect);
             }
-            return R.error("收藏删除失败",collect);
+            return R.error("收藏删除失败",Collect.defaultConstruct());
         }
 
         return R.error("该收藏不存在",Collect.defaultConstruct());
@@ -77,9 +79,9 @@ public class CollectController {
                 return R.success("收藏更新成功",collect);
             }
 
-            return R.error("收藏更新失败",collect);
+            return R.error("收藏更新失败",Collect.defaultConstruct());
         }
-        return R.error("该收藏不存在",collect);
+        return R.error("该收藏不存在",Collect.defaultConstruct());
     }
 
     @GetMapping("/page/{userName}/{type}/{page}/{pageSize}")
@@ -106,7 +108,7 @@ public class CollectController {
 
     @GetMapping("/count/{target}")
     @ApiOperation("获得目标被收藏数")
-    public R<String> count(@PathVariable String target){
+    public R<Long> count(@PathVariable String target){
         log.info("收藏数量获取--> target={}",target);
 
         LambdaQueryWrapper<Collect> wrapper = new LambdaQueryWrapper<>();
@@ -114,7 +116,7 @@ public class CollectController {
 
         Long count = collectService.count(wrapper);
 
-        return R.success("统计成功").add("count",count.toString());
+        return R.success("统计成功",count);
     }
 
 }
