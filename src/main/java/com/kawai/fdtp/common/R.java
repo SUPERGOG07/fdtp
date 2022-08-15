@@ -1,11 +1,18 @@
 package com.kawai.fdtp.common;
 
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@Slf4j
+@AllArgsConstructor
+@NoArgsConstructor
 public class R<T> {
 
     private Integer code;
@@ -16,6 +23,7 @@ public class R<T> {
 
     private Map map = new HashMap();
 
+
     public static <T> R<T> success(T object){
         R<T> r = new R<T>();
         r.data = object;
@@ -24,7 +32,7 @@ public class R<T> {
         return r;
     }
 
-    public static <T> R<T> success(T object,String msg){
+    public static <T> R<T> success(String msg,T object){
         R<T> r = new R<T>();
         r.data = object;
         r.code = 1;
@@ -32,10 +40,20 @@ public class R<T> {
         return r;
     }
 
-    public static <T> R<T> error(String msg){
+    public static <T> R<T> error(String msg,T object){
         R<T> r = new R<>();
         r.code = 0;
         r.msg = msg;
+        r.data = object;
+
+        return r;
+    }
+
+    public static R<String> noAuth(String msg){
+        R<String> r = new R<>();
+        r.code = 403;
+        r.msg = msg;
+        r.data = "";
 
         return r;
     }

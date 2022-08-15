@@ -13,9 +13,4 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-    @Override
-    @Cacheable(value = {"user"},key = "#root.methodName",sync = true)
-    public List<User> getUser(String userName) {
-        return this.baseMapper.selectList(new LambdaQueryWrapper<User>().eq(User::getUserName,userName));
-    }
 }

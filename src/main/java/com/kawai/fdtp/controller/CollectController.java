@@ -2,6 +2,7 @@ package com.kawai.fdtp.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.kawai.fdtp.common.HasRole;
 import com.kawai.fdtp.common.R;
 import com.kawai.fdtp.pojo.Collect;
 import com.kawai.fdtp.service.CollectService;
@@ -11,11 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/collect")
+@HasRole(value = {"customer"})
 public class CollectController {
 
     @Resource
@@ -25,28 +28,28 @@ public class CollectController {
 
     @PostMapping("/add")
     @ApiOperation("添加收藏")
-    public R<String> add(@RequestBody Collect collect){
+    public R<Collect> add(@RequestBody Collect collect){
         log.info("收藏增加-->{}",collect.toString());
 
         LambdaQueryWrapper<Collect> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Collect::getUserName,collect.getUserName()).eq(Collect::getType,collect.getType())
                 .eq(Collect::getTarget,collect.getTarget());
         if(collectService.getOne(wrapper)!=null){
-            return R.error("已存在该收藏");
+            return R.error("已存在该收藏",collect);
         }else {
             collect.setTime(System.currentTimeMillis());
             if(collectService.save(collect)){
 
                 postsService.change(collect.getTarget(),1);
 
-                return R.success("对象收藏成功");
-            }else return R.error("对象收藏失败");
+                return R.success("对象收藏成功",collect);
+            }else return R.error("对象收藏失败",collect);
         }
     }
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation("删除收藏")
-    public R<String> delete(@PathVariable String id){
+    public R<Collect> delete(@PathVariable String id){
         log.info("收藏删除-->{}",id);
 
         Collect collect = collectService.getById(id);
@@ -55,12 +58,12 @@ public class CollectController {
             if(collectService.removeById(id)){
                 postsService.change(collect.getTarget(),-1);
 
-                return R.success("收藏删除成功");
+                return R.success("收藏删除成功",collect);
             }
-            return R.error("收藏删除失败");
+            return R.error("收藏删除失败",collect);
         }
 
-        return R.error("该收藏不存在");
+        return R.error("该收藏不存在",new Collect());
     }
 
     @PutMapping("/update")
@@ -71,12 +74,12 @@ public class CollectController {
         if(collectService.getById(collect.getId())!=null){
             collect.setTime(System.currentTimeMillis());
             if(collectService.updateById(collect)){
-                return R.success(collect,"收藏更新成功");
+                return R.success("收藏更新成功",collect);
             }
 
-            return R.error("收藏更新失败");
+            return R.error("收藏更新失败",collect);
         }
-        return R.error("该收藏不存在");
+        return R.error("该收藏不存在",collect);
     }
 
     @GetMapping("/page/{userName}/{type}/{page}/{pageSize}")
@@ -92,10 +95,10 @@ public class CollectController {
 
         if(pageInfo.getTotal()!=0){
 
-            return R.success(pageInfo.getRecords());
+            return R.success("查询成功",pageInfo.getRecords());
         }
 
-        return R.error("查询失败");
+        return R.error("查询失败",new ArrayList<>());
 
     }
 

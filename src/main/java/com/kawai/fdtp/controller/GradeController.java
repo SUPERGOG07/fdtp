@@ -1,5 +1,6 @@
 package com.kawai.fdtp.controller;
 
+import com.kawai.fdtp.common.HasRole;
 import com.kawai.fdtp.common.R;
 import com.kawai.fdtp.service.*;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,7 @@ import javax.annotation.Resource;
 @Slf4j
 @RestController
 @RequestMapping("/grade")
+@HasRole(value = {"customer"})
 public class GradeController {
 
     @Resource
@@ -52,9 +54,9 @@ public class GradeController {
             default:flag=false;
         }
         if (flag){
-            return R.success("点赞成功");
+            return R.success("点赞成功","");
         }
-        return R.error("点赞失败");
+        return R.error("点赞失败","");
     }
 
     @GetMapping("/cancel/{type}/{target}")
@@ -82,9 +84,9 @@ public class GradeController {
             default:flag=false;
         }
         if (flag){
-            return R.success("取消赞成功");
+            return R.success("取消赞成功","");
         }
-        return R.error("取消赞失败");
+        return R.error("取消赞失败","");
     }
 
 }
