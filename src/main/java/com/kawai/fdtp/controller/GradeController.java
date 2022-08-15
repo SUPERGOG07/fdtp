@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 @Slf4j
 @RestController
 @RequestMapping("/grade")
-@HasRole(value = {"customer"})
+@HasRole(value = {"customer","admin"})
 public class GradeController {
 
     @Resource

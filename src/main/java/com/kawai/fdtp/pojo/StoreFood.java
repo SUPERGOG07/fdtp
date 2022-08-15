@@ -8,19 +8,20 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("picture")
-public class Picture {
+@TableName("store_food")
+public class StoreFood {
 
     private String id;
-
-    private Integer type;
-
+    //美食
+    private String name;
+    //店铺
     private String target;
 
     private String url;
 
-    public static Picture defaultConstruct(){
-        return new Picture("1",1,"1","1");
-    }
+    private String price;
 
+    public static StoreFood defaultConstruct(){
+        return new StoreFood("1","1","1","1","1");
+    }
 }

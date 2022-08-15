@@ -25,4 +25,12 @@ public class Store {
 
     private Integer grade;
 
+    private String target;
+
+    private String workTime;
+
+    public static Store defaultConstruct(){
+        return new Store("1","1","1","1","1","1",1,"1","1");
+    }
+
 }

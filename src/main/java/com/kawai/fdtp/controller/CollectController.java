@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/collect")
-@HasRole(value = {"customer"})
+@HasRole(value = {"customer","admin"})
 public class CollectController {
 
     @Resource

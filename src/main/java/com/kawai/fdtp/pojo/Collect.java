@@ -24,7 +24,9 @@ public class Collect {
 
     private Long time;
 
+    private String picture;
+
     public static Collect defaultConstruct(){
-        return new Collect("1","1",1,"1",System.currentTimeMillis());
+        return new Collect("1","1",1,"1",System.currentTimeMillis(),"1");
     }
 }

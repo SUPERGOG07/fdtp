@@ -25,6 +25,12 @@ public class Posts {
 
     private Integer collect;
 
-    private LocalDateTime time;
+    private Long time;
+
+    private String picture;
+
+    public static Posts defaultConstruct(){
+        return new Posts("1","1","1","1",1,1,1L,"1");
+    }
 
 }
