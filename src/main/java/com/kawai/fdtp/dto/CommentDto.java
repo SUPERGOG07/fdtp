@@ -1,9 +1,13 @@
 package com.kawai.fdtp.dto;
 
 import com.kawai.fdtp.pojo.Comment;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CommentDto extends Comment {
 
     private String id;
@@ -25,11 +29,11 @@ public class CommentDto extends Comment {
 
     private Long time;
 
+    private Integer isCheck;
+
     private String head;
 
     public static CommentDto defaultConstruct(){
-        CommentDto commentDto = (CommentDto) Comment.defaultConstruct();
-        commentDto.setHead("1");
-        return commentDto;
+        return new CommentDto("1","1",1,"1","1",1,1,System.currentTimeMillis(),1,"1");
     }
 }

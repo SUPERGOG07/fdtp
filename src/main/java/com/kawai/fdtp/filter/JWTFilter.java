@@ -51,12 +51,12 @@ public class JWTFilter implements Filter {
             String role = map.get("role");
 
             if(SpringUtil.checkUrl(requestURI,role)){
-                log.info("用户请求成功:user={},url={}",user,requestURI);
+                log.info("用户请求成功:user={},url={},role={}",user,requestURI,role);
                 filterChain.doFilter(request,response);
                 return;
             }
 
-            log.info("用户缺少权限:user={},url={}",user,requestURI);
+            log.info("用户缺少权限:user={},url={},role={}",user,requestURI,role);
             response.getWriter().write(JSON.toJSONString(R.noAuth("用户缺少权限")));
             return;
         }

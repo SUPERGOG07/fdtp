@@ -19,8 +19,10 @@ public class Picture {
 
     private String url;
 
+    private Long time;
+
     public static Picture defaultConstruct(){
-        return new Picture("1",1,"1","1");
+        return new Picture("1",1,"1","1",System.currentTimeMillis());
     }
 
 }

@@ -19,7 +19,8 @@ public interface CommentMapper extends BaseMapper<Comment> {
             "WHERE c.user_name = u.user_name AND " +
             "c.type= #{type} AND " +
             "c.target= #{target} AND " +
-            "c.level= #{level} " +
+            "c.level= #{level} AND " +
+            "c.is_check != 2 " +
             "ORDER BY c.time")
     IPage<CommentDto> getCommentList(Page<CommentDto> pageInfo,
                                      @Param("type") int type, @Param("target") String target, @Param("level") int level);

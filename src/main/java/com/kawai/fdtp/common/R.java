@@ -28,7 +28,7 @@ public class R<T> {
         R<T> r = new R<T>();
         r.data = object;
         r.code = 1;
-        r.msg = "";
+        r.msg = "success";
         return r;
     }
 
@@ -46,6 +46,14 @@ public class R<T> {
         r.msg = msg;
         r.data = object;
 
+        return r;
+    }
+
+    public static <T> R<T> error(T object){
+        R<T> r = new R<>();
+        r.code = 0;
+        r.msg = "error";
+        r.data = object;
         return r;
     }
 

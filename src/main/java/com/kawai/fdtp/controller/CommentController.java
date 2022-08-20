@@ -31,6 +31,7 @@ public class CommentController {
         log.info("添加评论-->{}", comment.toString());
 
         comment.setGrade(0);
+        comment.setIsCheck(0);
         comment.setTime(System.currentTimeMillis());
         if (commentService.save(comment)){
             return R.success("评论添加成功",comment);
@@ -81,9 +82,10 @@ public class CommentController {
     @GetMapping("/page/{type}/{target}/{level}/{page}/{pageSize}")
     @ApiOperation("评论分页查询")
     public R<List<CommentDto>> getPage(@PathVariable int type, @PathVariable String target , @PathVariable int level, @PathVariable int page, @PathVariable int pageSize){
-        log.info("评论分页查询--> type={}, page = {} , pageSize = {}",type,page,pageSize);
+        log.info("评论分页查询--> type={}, target = {} , page = {} , pageSize = {}",type,target,page,pageSize);
 
-        List<CommentDto> result = commentService.getCommentList(type, target, level, page, pageSize);
+        List<CommentDto> result = new ArrayList<>();
+        result.addAll(commentService.getCommentList(type, target, level, page, pageSize));
 
         if (!result.isEmpty()){
             return R.success("查询成功",result);

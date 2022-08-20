@@ -29,7 +29,10 @@ public class Food {
     //配料
     private String ingredients;
 
+    // 0 表示 未 , 1 表示 过 , 2 表示 不过
+    private Integer isCheck;
+
     public static Food defaultConstruct(){
-        return new Food("1","1","1","1",1,"1","1","1","1");
+        return new Food("1","1","1","1",1,"1","1","1","1",2);
     }
 }
