@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 public class Picture {
 
     private String id;
-
+    /**
+     * 0:store  1:food  2:attraction 3:posts 4:comment
+     */
     private Integer type;
 
     private String target;

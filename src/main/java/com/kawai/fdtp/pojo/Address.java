@@ -13,6 +13,9 @@ public class Address {
 
     private String id;
     //目标类型
+    /**
+     * 0:store  1:food  2:attraction 3:posts 4:comment
+     */
     private Integer type;
     //目标id
     private String target;
