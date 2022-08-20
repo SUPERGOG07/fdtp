@@ -21,7 +21,7 @@ public class R<T> {
 
     private T data;
 
-    private Map map = new HashMap();
+    private Map<String,Object> map = new HashMap<>();
 
 
     public static <T> R<T> success(T object){
@@ -66,7 +66,7 @@ public class R<T> {
         return r;
     }
 
-    public R<T> add(String key,String value){
+    public R<T> add(String key,Object value){
         this.map.put(key,value);
         return this;
     }

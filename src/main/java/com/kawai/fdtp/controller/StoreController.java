@@ -1,8 +1,11 @@
 package com.kawai.fdtp.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.kawai.fdtp.common.HasRole;
 import com.kawai.fdtp.common.R;
 import com.kawai.fdtp.pojo.Store;
+import com.kawai.fdtp.pojo.StoreFood;
+import com.kawai.fdtp.service.StoreFoodService;
 import com.kawai.fdtp.service.StoreService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,9 @@ public class StoreController {
 
     @Resource
     StoreService storeService;
+
+    @Resource
+    StoreFoodService storeFoodService;
 
     @PostMapping("/add")
     @ApiOperation("增加店铺")
@@ -64,19 +70,76 @@ public class StoreController {
         return R.error("更新失败",Store.defaultConstruct());
     }
 
-    @GetMapping("/page")
-    @ApiOperation("店铺列表")
-    public R<List<Store>> getStores(String target,Integer page,Integer size){
-        log.info("店铺获取-->{}",target);
+    @GetMapping("/page/food")
+    @ApiOperation("根据美食推荐店铺")
+    public R<List<Store>> getStoresByFood(String foodName,Integer page,Integer size){
+        log.info("美食推荐店铺-->foodName={}",foodName);
 
         List<Store> stores = new ArrayList<>();
-        stores.addAll(storeService.getStores(target, page, size));
+        stores.addAll(storeService.getStoresByFood(foodName,page,size));
 
         if (!stores.isEmpty()){
-            return R.success("查询成功",stores);
+            Store.check(stores);
+            return R.success(stores);
         }
-
         stores.add(Store.defaultConstruct());
         return R.error("查询失败",stores);
     }
+
+//    @GetMapping("/page/address")
+//    @ApiOperation("根据位置推荐店铺")
+//    public R<List<Store>> getStoresByAddress(){
+//
+//    }
+
+    @PostMapping("/food/add")
+    @ApiOperation("店铺特色菜添加")
+    public R<StoreFood> addStoreFood(StoreFood storeFood){
+        log.info("店铺特色菜添加-->target={}",storeFood.getTarget());
+
+        if(storeFood.getNormal()==null || storeFood.getNormal().isEmpty()){
+            storeFood.setNormal(storeFood.getName());
+        }
+
+        if(storeFoodService.getOne(new LambdaQueryWrapper<StoreFood>()
+                .eq(StoreFood::getName,storeFood.getName()).eq(StoreFood::getTarget,storeFood.getTarget()))!=null){
+            return R.error("已存在该特色菜",StoreFood.defaultConstruct());
+        }
+
+        if(storeFoodService.save(storeFood)){
+            return R.success(storeFood);
+        }
+        return R.error("添加失败",StoreFood.defaultConstruct());
+    }
+
+    @PutMapping("/food/update")
+    @ApiOperation("店铺特色菜更新")
+    public R<StoreFood> updateStoreFood(StoreFood storeFood){
+        log.info("店铺特色菜更新-->target={}",storeFood.getTarget());
+
+        if(storeFoodService.getOne(new LambdaQueryWrapper<StoreFood>()
+                .eq(StoreFood::getName,storeFood.getName()).eq(StoreFood::getTarget,storeFood.getTarget()))!=null){
+            if (storeFoodService.updateById(storeFood)){
+                return R.success(storeFood);
+            }
+
+            return R.error("更新失败",StoreFood.defaultConstruct());
+        }
+        return R.error("不存在该特色菜",StoreFood.defaultConstruct());
+    }
+
+    @DeleteMapping("/food/delete")
+    @ApiOperation("店铺特色菜删除")
+    public R<StoreFood> deleteStoreFood(String id){
+        log.info("店铺特色菜删除--> id={}",id);
+
+        if (storeFoodService.getById(id)!=null){
+            if(storeFoodService.removeById(id)){
+                return R.success(StoreFood.defaultConstruct());
+            }
+            return R.error("删除失败",StoreFood.defaultConstruct());
+        }
+        return R.error("不存在该特色菜",StoreFood.defaultConstruct());
+    }
+
 }

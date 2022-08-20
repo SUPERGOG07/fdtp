@@ -1,16 +1,23 @@
 package com.kawai.fdtp.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kawai.fdtp.mapper.AddressMapper;
 import com.kawai.fdtp.mapper.AttractionMapper;
+import com.kawai.fdtp.mapper.StoreFoodMapper;
 import com.kawai.fdtp.mapper.StoreMapper;
+import com.kawai.fdtp.pojo.Address;
 import com.kawai.fdtp.pojo.Attraction;
 import com.kawai.fdtp.pojo.Store;
+import com.kawai.fdtp.pojo.StoreFood;
+import com.kawai.fdtp.service.StoreFoodService;
 import com.kawai.fdtp.service.StoreService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,17 +38,9 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
     }
 
     @Override
-    public List<Store> getStores(String target,Integer page,Integer size) {
-        LambdaQueryWrapper<Store> wrapper = new LambdaQueryWrapper<>();
-        if(!target.equals("all")){
-            wrapper.eq(Store::getTarget,target);
-        }
-        wrapper.eq(Store::getIsCheck,1)
-                .orderByDesc(Store::getGrade);
+    public List<Store> getStoresByFood(String foodName, Integer page, Integer size) {
+        IPage<Store> iPage = storeMapper.getStoresByFood(new Page<>(page,size),foodName);
 
-        Page<Store> pageInfo = new Page<>(page,size);
-        storeMapper.selectPage(pageInfo,wrapper);
-
-        return pageInfo.getRecords();
+        return iPage.getRecords();
     }
 }

@@ -11,5 +11,5 @@ public interface StoreService extends IService<Store> {
     Boolean grade(String id,int num);
 
     //获得特定目标关联的商品列表
-    List<Store> getStores(String target,Integer page,Integer size);
+    List<Store> getStoresByFood(String foodName,Integer page,Integer size);
 }

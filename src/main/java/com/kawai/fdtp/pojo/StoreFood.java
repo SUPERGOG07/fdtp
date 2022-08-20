@@ -21,7 +21,9 @@ public class StoreFood {
 
     private String price;
 
+    private String normal;
+
     public static StoreFood defaultConstruct(){
-        return new StoreFood("1","1","1","1","1");
+        return new StoreFood("1","1","1","1","1","1");
     }
 }
