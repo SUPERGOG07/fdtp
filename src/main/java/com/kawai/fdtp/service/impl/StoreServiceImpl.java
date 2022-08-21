@@ -75,6 +75,7 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
 
         });
         storeList.sort(Comparator.comparing(Store::getGrade).reversed());
+        Store.check(storeList);
 
         return storeList;
     }
