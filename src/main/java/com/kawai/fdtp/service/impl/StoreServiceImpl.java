@@ -57,7 +57,10 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
         addressMapper.selectPage(storePage,wrapper);
         if (storePage.getRecords().isEmpty()){
             wrapper.clear();
-            wrapper.like(Address::getDetail,detail);
+            wrapper.like(Address::getCity,detail).or().like(Address::getArea,detail).or()
+                            .like(Address::getTown,detail).or().like(Address::getVillage,detail).or()
+                            .like(Address::getStreet,detail).or().like(Address::getRoad,detail).or()
+                            .like(Address::getDetail,detail);
             addressMapper.selectPage(storePage,wrapper);
         }
         List<Address> addressList = new ArrayList<>(storePage.getRecords());
