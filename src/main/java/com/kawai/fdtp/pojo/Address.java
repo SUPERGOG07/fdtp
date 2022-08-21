@@ -48,7 +48,7 @@ public class Address {
                 "1","1","1","1","1","1","1","1");
     }
 
-    public static void pickup(String address,LambdaQueryWrapper<Address> wrapper,String detail){
+    public static String  pickup(String address,LambdaQueryWrapper<Address> wrapper){
         boolean flag = false;
 
         address = address.substring(address.indexOf("省")+1);
@@ -119,7 +119,7 @@ public class Address {
             wrapper.eq(Address::getDetail,"unknown detail and can't be check");
         }
 
-        detail = detail+address;
+        return address;
     }
 
     public static void check(Address address){

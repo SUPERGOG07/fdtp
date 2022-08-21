@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -50,15 +51,13 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
     @Override
     public List<Store> getStoresByAddress(String address, Integer page, Integer size) {
         LambdaQueryWrapper<Address> wrapper = new LambdaQueryWrapper<>();
-        String detail = "";
-        Address.pickup(address,wrapper,detail);
+        String detail = Address.pickup(address,wrapper);
 
         Page<Address> storePage = new Page<>(page,size);
         addressMapper.selectPage(storePage,wrapper);
         if (storePage.getRecords().isEmpty()){
-            System.out.println("==================================");
-            LambdaQueryWrapper<Address> wrapper1 = new LambdaQueryWrapper<>();
-            wrapper1.like(Address::getDetail,detail);
+            wrapper.clear();
+            wrapper.like(Address::getDetail,detail);
             addressMapper.selectPage(storePage,wrapper);
         }
         List<Address> addressList = new ArrayList<>(storePage.getRecords());
@@ -72,6 +71,7 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
             }
 
         });
+        storeList.sort(Comparator.comparing(Store::getGrade).reversed());
 
         return storeList;
     }
