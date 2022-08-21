@@ -3,6 +3,7 @@ package com.kawai.fdtp.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.kawai.fdtp.common.HasRole;
 import com.kawai.fdtp.common.R;
+import com.kawai.fdtp.pojo.Address;
 import com.kawai.fdtp.pojo.Store;
 import com.kawai.fdtp.pojo.StoreFood;
 import com.kawai.fdtp.service.StoreFoodService;
@@ -86,11 +87,21 @@ public class StoreController {
         return R.error("查询失败",stores);
     }
 
-//    @GetMapping("/page/address")
-//    @ApiOperation("根据位置推荐店铺")
-//    public R<List<Store>> getStoresByAddress(){
-//
-//    }
+    @GetMapping("/page/address")
+    @ApiOperation("根据位置推荐店铺")
+    public R<List<Store>> getStoresByAddress(String address,Integer page,Integer size){
+        log.info("地址推荐店铺--> address={}",address);
+
+        List<Store> stores = new ArrayList<>();
+        stores.addAll(storeService.getStoresByAddress(address,page,size));
+
+        if (!stores.isEmpty()){
+            return R.success(stores);
+        }
+
+        stores.add(Store.defaultConstruct());
+        return R.error("查询失败",stores);
+    }
 
     @PostMapping("/food/add")
     @ApiOperation("店铺特色菜添加")

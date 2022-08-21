@@ -25,12 +25,13 @@ public class AddressController {
     @ApiOperation("添加地址")
     public R<Address> addAddress(Address address){
         log.info("地址添加--> target={}",address.getTarget());
+        Address.check(address);
 
         if(addressService.getOne(new LambdaQueryWrapper<Address>().eq(Address::getTarget,address.getTarget()))!=null){
             return R.error("已经存在该地址",Address.defaultConstruct());
         }
 
-        if (addressService.save(address)) {
+        if (addressService.addAddress(address)) {
             return R.success(address);
         }
 
@@ -56,10 +57,8 @@ public class AddressController {
     public R<Address> deleteAddress(String target){
         log.info("地址删除--> target={}",target);
 
-        if (addressService.getOne(new LambdaQueryWrapper<Address>().eq(Address::getTarget,target))!=null){
-            if(addressService.remove(new LambdaQueryWrapper<Address>().eq(Address::getTarget,target))){
-                return R.success(Address.defaultConstruct());
-            }
+        if (addressService.deleteAddress(target)){
+            return R.success(Address.defaultConstruct());
         }
         return R.error("删除失败",Address.defaultConstruct());
     }

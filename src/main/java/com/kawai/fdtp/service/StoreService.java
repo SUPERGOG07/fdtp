@@ -12,4 +12,6 @@ public interface StoreService extends IService<Store> {
 
     //获得特定目标关联的商品列表
     List<Store> getStoresByFood(String foodName,Integer page,Integer size);
+
+    List<Store> getStoresByAddress(String address,Integer page,Integer size);
 }

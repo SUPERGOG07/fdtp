@@ -25,6 +25,9 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
     @Resource
     StoreMapper storeMapper;
 
+    @Resource
+    AddressMapper addressMapper;
+
     @Override
     public Boolean grade(String id, int num) {
         Store store = storeMapper.selectById(id);
@@ -42,5 +45,34 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
         IPage<Store> iPage = storeMapper.getStoresByFood(new Page<>(page,size),foodName);
 
         return iPage.getRecords();
+    }
+
+    @Override
+    public List<Store> getStoresByAddress(String address, Integer page, Integer size) {
+        LambdaQueryWrapper<Address> wrapper = new LambdaQueryWrapper<>();
+        String detail = "";
+        Address.pickup(address,wrapper,detail);
+
+        Page<Address> storePage = new Page<>(page,size);
+        addressMapper.selectPage(storePage,wrapper);
+        if (storePage.getRecords().isEmpty()){
+            System.out.println("==================================");
+            LambdaQueryWrapper<Address> wrapper1 = new LambdaQueryWrapper<>();
+            wrapper1.like(Address::getDetail,detail);
+            addressMapper.selectPage(storePage,wrapper);
+        }
+        List<Address> addressList = new ArrayList<>(storePage.getRecords());
+
+        List<Store> storeList = new ArrayList<>();
+
+        addressList.forEach(address1 -> {
+            Store store = storeMapper.selectOne(new LambdaQueryWrapper<Store>().eq(Store::getAddress,address1.getId()));
+            if (store!=null){
+                storeList.add(store);
+            }
+
+        });
+
+        return storeList;
     }
 }
