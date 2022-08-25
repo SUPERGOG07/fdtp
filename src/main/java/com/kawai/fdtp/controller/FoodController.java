@@ -1,6 +1,7 @@
 package com.kawai.fdtp.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kawai.fdtp.common.HasRole;
 import com.kawai.fdtp.common.R;
 import com.kawai.fdtp.pojo.Food;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -64,5 +67,53 @@ public class FoodController {
             }
         }
         return R.error("删除失败",Food.defaultConstruct());
+    }
+
+    @GetMapping("/page/address")
+    @ApiOperation("根据地址推荐美食")
+    public R<List<Food>> getFoodByAddress(String address,Integer page,Integer size) {
+        log.info("根据地址推荐美食-->address={}", address);
+
+        List<Food> foods = new ArrayList<>();
+        foods.addAll(foodService.getFoodByAddress(address, page, size));
+
+        if (!foods.isEmpty()){
+            return R.success(foods);
+        }
+
+        foods.add(Food.defaultConstruct());
+        return R.error(foods);
+    }
+
+    @GetMapping("/page/name")
+    @ApiOperation("根据名称推荐美食")
+    public R<List<Food>> getFoodByName(String name,String city){
+        log.info("根据名称推荐美食-->name={}",name);
+
+        List<Food> foods = new ArrayList<>();
+        foods.addAll(foodService.getFoodByName(name, city));
+
+        if (!foods.isEmpty()){
+            return R.success(foods);
+        }
+
+        foods.add(Food.defaultConstruct());
+        return R.error(foods);
+    }
+
+    @GetMapping("/page/grade")
+    @ApiOperation("根据评分推荐美食")
+    public R<List<Food>> getFoodByGrade(Integer page,Integer size){
+        Page<Food> foodPage = new Page<>(page,size);
+        foodService.page(foodPage,new LambdaQueryWrapper<Food>().orderByAsc(Food::getGrade));
+
+        List<Food> foods = new ArrayList<>(foodPage.getRecords());
+
+        if (!foods.isEmpty()){
+            return R.success(foodPage.getRecords());
+        }
+
+        foods.add(Food.defaultConstruct());
+        return R.error(foods);
     }
 }

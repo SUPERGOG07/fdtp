@@ -51,12 +51,14 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
     @Override
     public List<Store> getStoresByAddress(String address, Integer page, Integer size) {
         LambdaQueryWrapper<Address> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Address::getType,0);
         String detail = Address.pickup(address,wrapper);
 
         Page<Address> storePage = new Page<>(page,size);
         addressMapper.selectPage(storePage,wrapper);
         if (storePage.getRecords().isEmpty()){
             wrapper.clear();
+            wrapper.eq(Address::getType,0);
             wrapper.like(Address::getCity,detail).or().like(Address::getArea,detail).or()
                             .like(Address::getTown,detail).or().like(Address::getVillage,detail).or()
                             .like(Address::getStreet,detail).or().like(Address::getRoad,detail).or()
@@ -97,6 +99,7 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
             });
         }
 
+        result.sort(Comparator.comparing(Store::getGrade).reversed());
         Store.check(result);
         return result;
     }
