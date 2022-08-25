@@ -1,14 +1,25 @@
 package com.kawai.fdtp.common;
 
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.*;
 
 
@@ -80,5 +91,54 @@ public class SpringUtil {
         }
         return false;
     }
+
+    @Bean
+    public static String getSMToken(){
+
+        String username = "superdog07";
+        String password = "zxc.12345";
+
+        String token = null;
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+
+        try{
+            HttpPost httpPost = new HttpPost("https://smms.app/api/v2/token");
+
+            httpPost.addHeader("accept","*/*");
+            httpPost.addHeader("connection","Keep-Alive");
+            httpPost.addHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36 Edg/103.0.1264.44");
+
+
+
+            httpPost.setEntity(MultipartEntityBuilder.create()
+                    .addTextBody("username",username)
+                    .addTextBody("password",password)
+                    .build());
+
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+
+
+            if (response.getStatusLine().getStatusCode()==200){
+                HttpEntity entity = response.getEntity();
+                if (entity!=null){
+                    String entityJson = EntityUtils.toString(entity, Charset.defaultCharset());
+                    token = JSONObject.parseObject(entityJson).getObject("data", JSONObject.class).getString("token");
+                    log.info("token-->{}",token);
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return token;
+    }
+
 
 }

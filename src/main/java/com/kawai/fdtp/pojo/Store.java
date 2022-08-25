@@ -51,6 +51,9 @@ public class Store {
     }
 
     public static void check(List<Store> stores){
-        stores.forEach(store -> check(store));
+        if (!stores.isEmpty()){
+            stores.forEach(Store::check);
+        }
+
     }
 }

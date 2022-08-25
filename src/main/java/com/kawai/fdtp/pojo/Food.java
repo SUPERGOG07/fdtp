@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,5 +36,39 @@ public class Food {
 
     public static Food defaultConstruct(){
         return new Food("1","1","1","1",1,"1","1","1","1",2);
+    }
+
+    public static void check(Food food){
+        String unknown = "unknown";
+        if (food.getDetail()==null){
+            food.setDetail(unknown);
+        }
+        if (food.getMainPicture()==null){
+            food.setMainPicture(unknown);
+        }
+        if (food.getAddress()==null){
+            food.setAddress(unknown);
+        }
+        if (food.getHistory()==null){
+            food.setHistory(unknown);
+        }
+        if (food.getPractice()==null){
+            food.setPractice(unknown);
+        }
+        if (food.getIngredients()==null){
+            food.setIngredients(unknown);
+        }
+        if (food.getGrade()==null){
+            food.setGrade(0);
+        }
+        if (food.getIsCheck()==null){
+            food.setIsCheck(0);
+        }
+    }
+
+    public static void check(List<Food> foods){
+        if(!foods.isEmpty()){
+            foods.forEach(Food::check);
+        }
     }
 }

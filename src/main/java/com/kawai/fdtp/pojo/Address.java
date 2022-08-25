@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,7 +33,7 @@ public class Address {
     private String province;
     //市、直辖市
     private String city;
-    //区、县
+    //区、县、县级市
     private String area;
     //街道
     private String street;
@@ -50,20 +53,24 @@ public class Address {
 
     public static String  pickup(String address,LambdaQueryWrapper<Address> wrapper){
         boolean flag = false;
+        String[] special = {"福清市","龙海市","石狮市","晋江市","南安市","永安市","邵武市","武夷山市","建瓯市","漳平市","福安市","福鼎市"};
 
         address = address.substring(address.indexOf("省")+1);
 
         //市
         String city = address.substring(0,address.indexOf("市")+1);
         if (!city.isEmpty()){
-            flag = true;
-            wrapper.eq(Address::getCity,city);
+            if (!Arrays.asList(special).contains(city)){
+                flag = true;
+                wrapper.eq(Address::getCity,city);
+            }
         }
         address = address.substring(city.length());
 
         //区、县
         String area = address.substring(0,address.indexOf("区")+1);
-        if (!area.isEmpty()){
+        if (!area.isEmpty() && !area.contains("县") && !area.contains("市") && !area.contains("镇") && !area.contains("路")
+                && !area.contains("乡") && !area.contains("村") && !area.contains("街") && !area.contains("道")){
             flag = true;
             wrapper.eq(Address::getArea,area);
         }else {
@@ -71,6 +78,12 @@ public class Address {
             if (!area.isEmpty()){
                 flag = true;
                 wrapper.eq(Address::getArea,area);
+            }else {
+                area = address.substring(0,address.indexOf("市")+1);
+                if (Arrays.asList(special).contains(area)){
+                    flag =true;
+                    wrapper.eq(Address::getArea,area);
+                }
             }
         }
         address = address.substring(area.length());
@@ -85,7 +98,8 @@ public class Address {
 
         //镇
         String town = address.substring(0,address.indexOf("镇")+1);
-        if(town.isEmpty()){
+        if(town.isEmpty() || ( !area.contains("路") && !area.contains("乡") && !area.contains("村")
+                && !area.contains("街") && !area.contains("道"))){
             town = address.substring(0,address.indexOf("乡")+1);
         }
         if (!town.isEmpty()){

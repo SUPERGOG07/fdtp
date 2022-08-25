@@ -36,10 +36,8 @@ public class Attraction {
 
     private String address;
 
-    private String target;
-
     public static Attraction defaultConstruct(){
-        return new Attraction("1","1","1","1",1,"1","1");
+        return new Attraction("1","1","1","1",1,"1");
     }
 
 }

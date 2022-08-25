@@ -79,4 +79,25 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
 
         return storeList;
     }
+
+    @Override
+    public List<Store> getStoresByName(String name, String city) {
+        LambdaQueryWrapper<Store> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(Store::getName,name);
+
+        List<Store> stores = storeMapper.selectList(wrapper);
+        List<Store> result = new ArrayList<>();
+
+        if (!stores.isEmpty()){
+            stores.forEach(store -> {
+                if (addressMapper.selectOne(new LambdaQueryWrapper<Address>().eq(Address::getTarget,store.getId()))
+                        .getCity().equals(city)){
+                    result.add(store);
+                }
+            });
+        }
+
+        Store.check(result);
+        return result;
+    }
 }

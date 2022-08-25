@@ -1,6 +1,7 @@
 package com.kawai.fdtp.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.kawai.fdtp.common.FileUtil;
 import com.kawai.fdtp.common.HasRole;
 import com.kawai.fdtp.common.R;
 import com.kawai.fdtp.pojo.Picture;
@@ -8,11 +9,15 @@ import com.kawai.fdtp.service.PictureService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -87,5 +92,32 @@ public class PictureController {
 
         pictures.add(Picture.defaultConstruct());
         return R.error(pictures);
+    }
+
+
+    @PostMapping("/upload")
+    @ApiOperation("上传图片到SM图库")
+    public R<Picture> uploadFileToSM(Integer type,String target,@RequestParam(value = "file",required = false)MultipartFile file) throws IOException {
+        if (file!=null){
+            Map<String,String > result1 = FileUtil.uploadFile(file);
+            if(result1.get("state").equals("false")){
+                return R.error(result1.get("msg"),Picture.defaultConstruct());
+            }else {
+                Map<String,String> result2 = FileUtil.uploadFIleToSM(result1.get("msg"));
+                if(result2.get("state").equals("false")){
+                    return R.error(result2.get("msg"),Picture.defaultConstruct());
+                }else {
+                    Picture picture = new Picture();
+                    picture.setTime(System.currentTimeMillis());
+                    picture.setUrl(result2.get("msg"));
+                    picture.setType(type);
+                    picture.setTarget(target);
+                    if (pictureService.save(picture)){
+                        return R.success(picture);
+                    }return R.error("上传失败",Picture.defaultConstruct());
+                }
+            }
+        }
+        return R.error("上传失败",Picture.defaultConstruct());
     }
 }

@@ -72,9 +72,9 @@ public class StoreController {
     }
 
     @GetMapping("/page/food")
-    @ApiOperation("根据美食推荐店铺")
+    @ApiOperation("根据美食搜索店铺")
     public R<List<Store>> getStoresByFood(String foodName,Integer page,Integer size){
-        log.info("美食推荐店铺-->foodName={}",foodName);
+        log.info("美食搜索店铺-->foodName={}",foodName);
 
         List<Store> stores = new ArrayList<>();
         stores.addAll(storeService.getStoresByFood(foodName,page,size));
@@ -88,12 +88,31 @@ public class StoreController {
     }
 
     @GetMapping("/page/address")
-    @ApiOperation("根据位置推荐店铺")
+    @ApiOperation("根据位置搜索店铺")
     public R<List<Store>> getStoresByAddress(String address,Integer page,Integer size){
-        log.info("地址推荐店铺--> address={}",address);
+        log.info("地址搜索店铺--> address={}",address);
 
         List<Store> stores = new ArrayList<>();
         stores.addAll(storeService.getStoresByAddress(address,page,size));
+
+        if (!stores.isEmpty()){
+            return R.success(stores);
+        }
+
+        stores.add(Store.defaultConstruct());
+        return R.error("查询失败",stores);
+    }
+
+    @GetMapping("/page/name")
+    @ApiOperation("根据名称搜索店铺")
+    public R<List<Store>> getStoresByName(String name,String city){
+        log.info("名字搜索店铺-->name={}",name);
+        if (!city.contains("市")){
+            city = city + "市";
+        }
+
+        List<Store> stores = new ArrayList<>();
+        stores.addAll(storeService.getStoresByName(name, city));
 
         if (!stores.isEmpty()){
             return R.success(stores);
