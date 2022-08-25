@@ -27,6 +27,8 @@ public class AttractionController {
     public R<Attraction> addAttraction(Attraction attraction){
         log.info("景点添加-->attraction={}",attraction);
 
+        attraction.setGrade(0);
+
         if(attractionService.save(attraction)){
             return R.success(attraction);
         }

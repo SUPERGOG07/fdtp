@@ -28,6 +28,8 @@ public class FoodController {
     @ApiOperation("添加美食")
     public R<Food> addFood(Food food){
         log.info("添加美食-->food={}",food.getName());
+        food.setGrade(0);
+        food.setIsCheck(0);
 
         Food.check(food);
         if (foodService.getOne(new LambdaQueryWrapper<Food>().eq(Food::getName,food.getName()))!=null){
