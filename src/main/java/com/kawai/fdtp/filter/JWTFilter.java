@@ -5,6 +5,7 @@ import com.kawai.fdtp.common.JWTUtil;
 import com.kawai.fdtp.common.R;
 import com.kawai.fdtp.common.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.util.AntPathMatcher;
 
 import javax.servlet.*;
@@ -27,6 +28,12 @@ public class JWTFilter implements Filter {
         response.setContentType("application/json;charset=UTF-8");
 
         String requestURI = request.getRequestURI();
+        boolean flag = false;
+
+        if (requestURI.indexOf("/java")>-1){
+            requestURI = requestURI.substring("/java".length());
+            flag = true;
+        }
 
         log.info("拦截到请求 {}",requestURI);
 
@@ -52,7 +59,9 @@ public class JWTFilter implements Filter {
 
             if(SpringUtil.checkUrl(requestURI,role)){
                 log.info("用户请求成功:user={},url={},role={}",user,requestURI,role);
-                filterChain.doFilter(request,response);
+               if (flag){
+                   request.getRequestDispatcher(requestURI).forward(request,response);
+               }
                 return;
             }
 
